@@ -10,7 +10,7 @@ const productSchema = new Schema({
   },
   description: { type: String },
   priceVariant: { type: String },
-  
+
   date: { type: String },
   clarity: { type: String },
   need_recut: { type: String },
@@ -18,18 +18,18 @@ const productSchema = new Schema({
   origin: { type: String },
   shape: { type: String },
   weight: { type: String },
-  category: { type: String, required: true, },
+  category: { type: String, required: true },
   dimensionHeight: { type: String },
   dimensionWidth: { type: String },
   dimensionDepth: { type: String },
-  isSold:{type:Boolean},
-  invoiceNumber:{type:String},
+  isSold: { type: Boolean , default : false},
+  invoiceNumber: { type: String },
 
   //price details
   buyCurrency: { type: String },
   buyPrice: { type: String },
-  exchangeRate:{type: String },
-  buyPiece:{type: String },
+  exchangeRate: { type: String },
+  buyPiece: { type: String },
 
   sellPriceLocal: { type: String },
   sellPriceLocal2: { type: String },
@@ -40,28 +40,28 @@ const productSchema = new Schema({
 
   //store
   storeBox: { type: String },
-  storeBoxLocation:{ type: String }, //LocationBoxName+Row+Column
+  storeBoxLocation: { type: String }, //LocationBoxName+Row+Column
 
   //export
-  exportMainCategory:{ type: String },
-  exportWeightRange:{ type: String }, // 0.00  - 2.99 max  or above 3
+  exportMainCategory: { type: String },
+  exportWeightRange: { type: String }, // 0.00  - 2.99 max  or above 3
   supplier: [],
-  
+
   customer: [],
   images: [],
   videos: [],
-  verify:{
-    type:Boolean,
-    default:false
+  verify: {
+    type: Boolean,
+    default: false,
   },
-  verifyDate:{Date},
+  verifyDate: { Date },
   createdDate: {
-    type:Date,
-    default : Date.now()
-  } ,productStatus: {
+    type: Date,
+    default: Date.now(),
+  },
+  productStatus: {
     type: String,
-    default:"Active"
-    
+    default: "Active",
   },
 });
 
