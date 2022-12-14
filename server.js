@@ -11,9 +11,11 @@ const titlesRoutes = require("./components/titles/titlesRoutes");
 
 const suppliersRoutes = require("./components/suppliers/suppliersRoutes");
 const customersRoutes = require("./components/customers/customersRoutes");
+const banksRoutes = require("./components/banks/banksRoutes");
 const productsRoutes = require("./components/products/productsRoutes");
 const salesRoutes = require("./components/sales/salseRoutes");
 const brokersRoutes = require("./components/brokers/brokersRoutes");
+const storageRoutes = require("./components/storage/storageRoutes");
 
 const tripRoutes = require("./components/trips/tripRoutes");
 
@@ -96,6 +98,8 @@ app.use("/", productsRoutes);
 app.use("/", salesRoutes);
 app.use("/", tripRoutes);
 app.use("/", brokersRoutes);
+app.use("/", banksRoutes);
+app.use("/", storageRoutes);
 
 app.use("/", (req, res) => {
   res.send("Welcome shimla gem api");

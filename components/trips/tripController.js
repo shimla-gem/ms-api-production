@@ -16,7 +16,7 @@ exports.createTrip = async (req, res, next) => {
         tripId,tripName, startDate,endDate,fromCountry,toCountry,expense,cities,status
       })
       await newTrip.save()
-console.log("trip saved successfully")
+ 
       res.json({
         data: newTrip,
          
@@ -31,8 +31,8 @@ console.log("trip saved successfully")
  
 
 exports.getTrips = async (req, res, next) => {
-  const Trips = await Trip.find({});
-  console.log(Trips)
+  const Trips = await Trip.find({}).sort({tripId:-1});
+   
   res.status(200).json({
     data: Trips,
   });

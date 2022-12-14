@@ -49,11 +49,11 @@ exports.updateTitles = async (req, res, next) => {
   try {
     const update = req.body;
     const titlesId = req.params.titlesId;
-    console.log("titlesId", titlesId)
+    // console.log("titlesId", titlesId)
     const updated = await titles.findByIdAndUpdate(titlesId, update);
     const titles_data = await titles.findById(titlesId);
-    console.log("updated", updated)
-    console.log("titles_data", titles_data)
+    // console.log("updated", updated)
+    // console.log("titles_data", titles_data)
     res.status(200).json({
       data: titles_data,
       message: "titles has been updated",

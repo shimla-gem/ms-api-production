@@ -10,8 +10,8 @@ exports.createProduct = async (req, res, next) => {
       let old_id = Number(data);
       productId = old_id + 1;
 
-      console.log("productId", productId);
-      console.log("save product res.body", res.body);
+      // console.log("productId", productId);
+      // console.log("save product req.body[0].storageBoxName, ", req.body[0].storageBoxName);
 
       const newProduct = new Product({
         productId,
@@ -49,6 +49,10 @@ exports.createProduct = async (req, res, next) => {
         customer: req.body[0].customer,
         images: req.body[0].images,
         videos: req.body[0].videos,
+
+         //store
+        storageBoxName: req.body[0].storageBoxName,
+        storageSlot: req.body[0].storageSlot, //LocationBoxName+Row+Column
       });
       await newProduct.save();
       res.json({
@@ -61,7 +65,7 @@ exports.createProduct = async (req, res, next) => {
 };
 
 exports.fetchFilterProduct = async (req, res, next) => {
-  console.log("filters", req.body);
+  
   let a = req.body;
   let sort = "";
   let isSold = false;
@@ -89,8 +93,8 @@ exports.fetchFilterProduct = async (req, res, next) => {
     } //removing sort object
   }
   let sortby = sort && sort === "Asc" ? 1 : -1;
-  console.log(a);
-  console.log("sort by : ", sort);
+  // console.log(a);
+  // console.log("sort by : ", sort);
   const Products = await Product.find(a).sort({ _id: sortby });
   // console.log(Products)
   res.status(200).json({
@@ -99,7 +103,7 @@ exports.fetchFilterProduct = async (req, res, next) => {
 };
 exports.getProducts = async (req, res, next) => {
   const Products = await Product.find({}).sort({ _id: -1 , isSold : -1 });
-  console.log("Products count", Products.length)
+  
   res.status(200).json({
     data: Products,
   });

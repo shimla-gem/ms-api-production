@@ -39,8 +39,8 @@ const productSchema = new Schema({
   sellPriceForeigners2: { type: String },
 
   //store
-  storeBox: { type: String },
-  storeBoxLocation: { type: String }, //LocationBoxName+Row+Column
+  storageBoxName: { type: String },
+  storageSlot: { type: String }, //LocationBoxName+Row+Column
 
   //export
   exportMainCategory: { type: String },

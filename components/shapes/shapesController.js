@@ -27,7 +27,7 @@ exports.createShapes = async (req, res, next) => {
 
 exports.getShapes = async (req, res, next) => {
   const shapes = await Shapes.find({});
-  console.log("Shapes fetching", shapes)
+  // console.log("Shapes fetching", shapes)
   res.status(200).json({
     data: shapes,
   });
