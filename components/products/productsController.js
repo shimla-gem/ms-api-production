@@ -97,6 +97,7 @@ exports.fetchFilterProduct = async (req, res, next) => {
   // console.log("sort by : ", sort);
   const Products = await Product.find(a).sort({ _id: sortby });
   // console.log(Products)
+  console.log("selected product ",Products)
   res.status(200).json({
     data: Products,
   });
@@ -114,6 +115,7 @@ exports.getProduct = async (req, res, next) => {
     const productId = req.params.productId;
     const product = await Product.findById(productId);
     if (!product) return next(new Error("Product does not exist"));
+    
     res.status(200).json({
       data: product,
     });
@@ -122,21 +124,38 @@ exports.getProduct = async (req, res, next) => {
   }
 };
 
+ 
 exports.updateProduct = async (req, res, next) => {
   try {
     const update = req.body;
-     
     const productId = req.params.productId;
-    await Product.findByIdAndUpdate(productId, update);
+
+    // validate input data
+    if (!update || Object.keys(update).length === 0) {
+      return res.status(400).json({ message: 'Invalid input data' });
+    }
+
     const product = await Product.findById(productId);
+    console.log("older product ", product)
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    // update product
+    await Product.findByIdAndUpdate(productId, update);
+    const updatedProduct = await Product.findById(productId);
+    console.log("updated product => ", updatedProduct)
     res.status(200).json({
-      data: product,
-      message: "Product has been updated",
+      data: updatedProduct,
+      message: 'Product has been updated',
     });
   } catch (error) {
-    next(error);
+    // handle errors
+    console.error(error);
+    res.status(500).json({ message: 'Something went wrong' });
   }
 };
+
 
 exports.deleteProduct = async (req, res, next) => {
   try {
