@@ -225,3 +225,104 @@ exports.deleteProduct = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.updateBulkSellPriceIncrease = async (req, res, next) => {
+  try {
+    const increasedPercentage = Number(req.body.increasedPercentage);
+
+    if (!increasedPercentage) {
+      return res.status(400).json({ data: "percentage cannot be empty" });
+    }
+
+    const products = await Product.find({ isSold: { $nin: [true] } });
+
+    for (let i = 0; i < products.length; i++) {
+      const product = products[i];
+      const oldPrice = Number(product.sellPriceForeigners);
+      const increaseDecimal = increasedPercentage / 100; // Convert percentage to decimal
+
+      const newPrice = +(oldPrice * (1 + increaseDecimal)).toFixed(2); // Calculate and round to 2 decimal places
+
+      const newLocalPrice = +(newPrice * product.exchangeRate).toFixed(2); // Calculate and round to 2 decimal places
+
+      await Product.updateOne(
+        { _id: product._id },
+        {
+          $set: {
+            sellPriceForeigners: newPrice,
+            sellPriceLocal: newLocalPrice,
+          },
+        }
+      );
+
+      // console.log("New price updated successfully.", newPrice);
+      // console.log("New local price updated successfully.", newLocalPrice);
+    }
+
+    console.log("Number of products updated: ", products.length);
+
+    // Rest of your code for logging, responding to the request, etc.
+
+    res.status(200).json({
+      data: products.length,
+    });
+
+  } catch (error) {
+    console.error("An error occurred while updating prices:", error);
+    res.status(500).json({
+      error: "Failed to update prices.",
+    });
+  }
+};
+
+exports.updateBulkSellPriceDecrease = async (req, res, next) => {
+  try {
+    const decreasedPercentage = Number(req.body.decreasedPercentage);
+
+    if (!decreasedPercentage) {
+      return res.status(400).json({ data: "percentage cannot be empty" });
+    }
+
+    const products = await Product.find({ isSold: { $nin: [true] } });
+
+    for (let i = 0; i < products.length; i++) {
+      const product = products[i];
+      const oldPrice = Number(product.sellPriceForeigners);
+
+      const newPrice = calculateDecreasedPrice(oldPrice, decreasedPercentage);
+
+      await Product.updateOne(
+        { _id: product._id },
+        {
+          $set: {
+            sellPriceForeigners: newPrice,
+            sellPriceLocal: newPrice * Number(product.exchangeRate),
+          },
+        }
+      );
+
+      console.log("New price updated successfully.", newPrice);
+    }
+
+    console.log("Number of products updated: ", products.length);
+
+    // Rest of your code for logging, responding to the request, etc.
+
+    res.status(200).json({
+      data: products.length,
+    });
+
+  } catch (error) {
+    console.error("An error occurred while updating prices:", error);
+    res.status(500).json({
+      error: "Failed to update prices.",
+    });
+  }
+};
+
+function calculateDecreasedPrice(oldPrice, decreasePercentage) {
+  const decreaseDecimal = decreasePercentage / 100; // Convert percentage to decimal
+  const newPrice = oldPrice - (oldPrice * decreaseDecimal);
+  return newPrice;
+}
+
