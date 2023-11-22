@@ -22,6 +22,7 @@ const tripRoutes = require("./components/trips/tripRoutes");
 var cors = require("cors");
 
 const connectDB = require("./config/db");
+const exchangeRateLogRoute = require("./components/exchangeRates/exchangeRateRoutes");
 require("dotenv").config({
   path: path.join(__dirname, "./.env"),
 });
@@ -100,6 +101,7 @@ app.use("/", tripRoutes);
 app.use("/", brokersRoutes);
 app.use("/", banksRoutes);
 app.use("/", storageRoutes);
+app.use("/", exchangeRateLogRoute);
 
 app.use("/", (req, res) => {
   res.send("Welcome shimla gem api");
