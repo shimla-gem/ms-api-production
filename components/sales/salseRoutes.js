@@ -7,6 +7,8 @@ salesRoutes.post('/sales', salesController.createSales);
 salesRoutes.post('/sendInvoice', salesController.sendInvoice);
 
 salesRoutes.get('/sales', salesController.getSales);
+salesRoutes.get('/sales/unsold-invoices', salesController.fetchUnsoldInvoices);
+salesRoutes.put('/sales/update-sales-missingStone', salesController.updateSalesMissingStone);
 salesRoutes.get('/sales/customer/:customerId', salesController.getSalesByCustomerId);
 
 salesRoutes.get('/sales/:salesId', allowIfLoggedin, salesController.getSingleSales); 

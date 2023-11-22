@@ -1,6 +1,8 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const Product = require("./productsModel");
+const ExchangeRateLog = require("../exchangeRates/exchangeRateModel");
+const moment = require("moment/moment");
 
 //createProduct
 exports.createProduct = async (req, res, next) => {
@@ -102,6 +104,60 @@ exports.fetchFilterProduct = async (req, res, next) => {
     data: Products,
   });
 };
+
+
+exports.updateExchangeRate = async (req, res, next) => {
+  try {
+    const exchangeRate = req.body.exchangeRate;
+
+    if(!exchangeRate) return res.status(400).json({data: "exchange rate cannot be empty"})
+
+    console.log("Exchange rate updated successfully.", exchangeRate);
+
+    const products = await Product.find({ isSold: { $nin: [true] } });
+    const prev = products.length > 0 ? products[0].exchangeRate : ''
+
+    for (let i = 0; i < products.length; i++) {
+      const product = products[i];
+
+      await Product.updateOne(
+        { _id: product._id },
+        {
+          $set: {
+            exchangeRate: exchangeRate,
+            sellPriceLocal: product.sellPriceForeigners * exchangeRate,
+          },
+        }
+      );
+    }
+
+    console.log("Number of products updated: ", products.length);
+
+    const exchangeRateLog = new ExchangeRateLog({
+      date: moment(),
+      prev: prev,
+      latest: exchangeRate,
+      effectedCounts: products.length
+    });
+
+    console.log(exchangeRateLog);
+
+    await exchangeRateLog.save();
+
+
+    res.status(200).json({
+      data: products.length,
+    });
+
+  } catch (error) {
+    console.error("An error occurred while updating exchange rate:", error);
+    res.status(500).json({
+      error: "Failed to update exchange rate.",
+    });
+  }
+};
+
+
 exports.getProducts = async (req, res, next) => {
   const Products = await Product.find({}).sort({ _id: -1 , isSold : -1 });
   
