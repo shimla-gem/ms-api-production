@@ -69,10 +69,14 @@ exports.createProduct = async (req, res, next) => {
 exports.fetchFilterProduct = async (req, res, next) => {
   
   let a = req.body;
+
+  console.log(a)
   let sort = "";
   let isSold = false;
   for (var key in a) {
-    if (a[key] === "") {
+
+    
+    if (a[key] === "" || a[key] ==="0") { //adding removeing zero values 
       delete a[key];
       continue;
     }
@@ -85,7 +89,7 @@ exports.fetchFilterProduct = async (req, res, next) => {
     }
 
     if (key === "productId" && a[key] !== "") {
-      if(a[key] !== "") console.log(" product key is empty")
+      if(a[key] === "") console.log(" product key is empty")
       a[key] = { $in: a[key].split(",") };
     }
 
