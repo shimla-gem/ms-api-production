@@ -53,8 +53,8 @@ exports.createProduct = async (req, res, next) => {
         videos: req.body[0].videos,
 
          //store
-        storageBoxName: req.body[0].storageBoxName,
-        storageSlot: req.body[0].storageSlot, //LocationBoxName+Row+Column
+        storageBoxName: req.body[0]?.storageBoxName,
+        storageSlot: req.body[0]?.storageSlot, //LocationBoxName+Row+Column
       });
       await newProduct.save();
       res.json({
@@ -245,9 +245,12 @@ exports.updateBulkSellPriceIncrease = async (req, res, next) => {
       const oldPrice = Number(product.sellPriceForeigners);
       const increaseDecimal = increasedPercentage / 100; // Convert percentage to decimal
 
-      const newPrice = +(oldPrice * (1 + increaseDecimal)).toFixed(2); // Calculate and round to 2 decimal places
+      let newPrice = +(oldPrice * (1 + increaseDecimal)).toFixed(2); // Calculate and round to 2 decimal places
+           
+      newPrice =  Math.ceil(oldPrice)
 
-      const newLocalPrice = +(newPrice * product.exchangeRate).toFixed(2); // Calculate and round to 2 decimal places
+      let newLocalPrice = +(newPrice * product.exchangeRate).toFixed(2); // Calculate and round to 2 decimal places
+      newLocalPrice =  Math.ceil(newLocalPrice)
 
       await Product.updateOne(
         { _id: product._id },
@@ -291,10 +294,10 @@ exports.updateBulkSellPriceDecrease = async (req, res, next) => {
 
     for (let i = 0; i < products.length; i++) {
       const product = products[i];
-      const oldPrice = Number(product.sellPriceForeigners);
-
-      const newPrice = calculateDecreasedPrice(oldPrice, decreasedPercentage);
-
+      let oldPrice = Number(product.sellPriceForeigners);
+      
+      let newPrice = calculateDecreasedPrice(oldPrice, decreasedPercentage);
+      newPrice =  Math.ceil(newPrice)
       await Product.updateOne(
         { _id: product._id },
         {
