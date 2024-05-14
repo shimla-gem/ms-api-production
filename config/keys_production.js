@@ -1,6 +1,6 @@
 module.exports = {
     mongoURI: process.env.MONGO_URI
-    ,secretOrKey:process.env.SECRECT_OR_KEY
+    ,secretOrKey:process.env.SECRECT_OR_KEY || 'secrect'
 };
 
 //shimlagem  production db
