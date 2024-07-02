@@ -163,7 +163,7 @@ exports.updateExchangeRate = async (req, res, next) => {
 
 
 exports.getProducts = async (req, res, next) => {
-  const Products = await Product.find({}).sort({ _id: -1 , isSold : -1 });
+  const Products = await Product.find({}).sort({ _id: 1 , isSold : -1 }); //changing to acs ord 2024/07/02 6:30 pm
   
   res.status(200).json({
     data: Products,
